@@ -12,7 +12,10 @@ export const setAuthCookies = (req, res, accessToken, refreshToken) => {
   // Safely detect if request is same-site or cross-site
   const origin = req.get('origin') || '';
   const host = req.get('host') || '';
-  const isSameSite = !origin || origin.includes(host);
+  const cleanOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+  const cleanClientUrl = env.CLIENT_URL ? (env.CLIENT_URL.endsWith('/') ? env.CLIENT_URL.slice(0, -1) : env.CLIENT_URL) : '';
+
+  const isSameSite = !origin || cleanOrigin.includes(host) || (cleanClientUrl && cleanOrigin === cleanClientUrl);
   
   const sameSiteOption = isProduction ? (isSameSite ? 'lax' : 'none') : 'lax';
 
@@ -53,7 +56,10 @@ export const clearAuthCookies = (req, res) => {
   // Safely detect if request is same-site or cross-site
   const origin = req.get('origin') || '';
   const host = req.get('host') || '';
-  const isSameSite = !origin || origin.includes(host);
+  const cleanOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+  const cleanClientUrl = env.CLIENT_URL ? (env.CLIENT_URL.endsWith('/') ? env.CLIENT_URL.slice(0, -1) : env.CLIENT_URL) : '';
+
+  const isSameSite = !origin || cleanOrigin.includes(host) || (cleanClientUrl && cleanOrigin === cleanClientUrl);
   
   const sameSiteOption = isProduction ? (isSameSite ? 'lax' : 'none') : 'lax';
 
