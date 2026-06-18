@@ -6,9 +6,15 @@ import env from '../config/env.js';
  * @param {string} accessToken 
  * @param {string} refreshToken 
  */
-export const setAuthCookies = (res, accessToken, refreshToken) => {
-  const isProduction = env.NODE_ENV === 'production';
-  const sameSiteOption = isProduction ? 'none' : 'lax';
+export const setAuthCookies = (req, res, accessToken, refreshToken) => {
+  const isProduction = env.NODE_ENV === 'production' || process.env.VERCEL === '1';
+  
+  // Safely detect if request is same-site or cross-site
+  const origin = req.get('origin') || '';
+  const host = req.get('host') || '';
+  const isSameSite = !origin || origin.includes(host);
+  
+  const sameSiteOption = isProduction ? (isSameSite ? 'lax' : 'none') : 'lax';
 
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
@@ -38,11 +44,18 @@ export const setAuthCookies = (res, accessToken, refreshToken) => {
 
 /**
  * Clears cookies on logout
+ * @param {object} req Express Request Object
  * @param {object} res Express Response Object
  */
-export const clearAuthCookies = (res) => {
-  const isProduction = env.NODE_ENV === 'production';
-  const sameSiteOption = isProduction ? 'none' : 'lax';
+export const clearAuthCookies = (req, res) => {
+  const isProduction = env.NODE_ENV === 'production' || process.env.VERCEL === '1';
+  
+  // Safely detect if request is same-site or cross-site
+  const origin = req.get('origin') || '';
+  const host = req.get('host') || '';
+  const isSameSite = !origin || origin.includes(host);
+  
+  const sameSiteOption = isProduction ? (isSameSite ? 'lax' : 'none') : 'lax';
 
   res.clearCookie('accessToken', {
     httpOnly: true,

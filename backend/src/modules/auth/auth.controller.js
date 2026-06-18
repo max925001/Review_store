@@ -36,7 +36,7 @@ export const login = asyncHandler(async (req, res) => {
   const { user, accessToken, refreshToken } = await authService.login({ email, password });
 
   // Save tokens in secure HTTP-only cookies
-  setAuthCookies(res, accessToken, refreshToken);
+  setAuthCookies(req, res, accessToken, refreshToken);
 
   return res
     .status(200)
@@ -62,7 +62,7 @@ export const refresh = asyncHandler(async (req, res) => {
     const { user, accessToken, refreshToken } = await authService.refreshTokens(incomingRefreshToken);
 
     // Set rotated tokens into cookies
-    setAuthCookies(res, accessToken, refreshToken);
+    setAuthCookies(req, res, accessToken, refreshToken);
 
     return res
       .status(200)
@@ -88,7 +88,7 @@ export const logout = asyncHandler(async (req, res) => {
   await authService.logout(refreshToken);
 
   // Clear HTTP-only cookies
-  clearAuthCookies(res);
+  clearAuthCookies(req, res);
 
   return res
     .status(200)
