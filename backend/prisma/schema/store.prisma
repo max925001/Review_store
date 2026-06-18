@@ -1,0 +1,17 @@
+model Store {
+  id               String        @id @default(uuid()) @db.Uuid
+  name             String        @db.VarChar(255)
+  email            String        @unique @db.VarChar(255)
+  address          String        @db.Text
+  createdBy        String        @map("created_by") @db.Uuid
+  totalReviewUser  Int           @default(0) @map("total_review_user")
+  avgrating        Decimal       @default(0.0) @db.Decimal(2, 1)
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt        DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  creator          User          @relation("CreatedStores", fields: [createdBy], references: [id])
+  employees        Employee[]
+  ratings          Rating[]
+
+  @@map("stores")
+}

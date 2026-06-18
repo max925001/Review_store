@@ -1,0 +1,17 @@
+model Employee {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  name      String    @db.VarChar(255)
+  email     String    @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  address   String?   @db.Text
+  role      String    @db.VarChar(50) // 'OWNER', etc.
+  storeId   String?   @map("store_id") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store     Store?    @relation(fields: [storeId], references: [id], onDelete: SetNull)
+
+  @@map("employees")
+}

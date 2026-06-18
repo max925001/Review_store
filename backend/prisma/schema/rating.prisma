@@ -1,0 +1,15 @@
+model Rating {
+  id        String    @id @default(uuid()) @db.Uuid
+  storeId   String    @map("store_id") @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  rating    Decimal   @db.Decimal(2, 1)
+  comment   String?   @db.Text
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, userId])
+  @@map("ratings")
+}
