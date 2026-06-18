@@ -14,14 +14,16 @@ export const setAuthCookies = (res, accessToken, refreshToken) => {
     httpOnly: true,
     secure: isProduction,
     sameSite: sameSiteOption,
-    maxAge: 15 * 60 * 1000 // 15 minutes
+    maxAge: 15 * 60 * 1000, // 15 minutes
+    path: '/'
   });
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: isProduction,
     sameSite: sameSiteOption,
-    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: '/'
   });
 
   // Companion cookie readable by client JS to check session presence
@@ -29,7 +31,8 @@ export const setAuthCookies = (res, accessToken, refreshToken) => {
     httpOnly: false,
     secure: isProduction,
     sameSite: sameSiteOption,
-    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: '/'
   });
 };
 
@@ -44,19 +47,22 @@ export const clearAuthCookies = (res) => {
   res.clearCookie('accessToken', {
     httpOnly: true,
     secure: isProduction,
-    sameSite: sameSiteOption
+    sameSite: sameSiteOption,
+    path: '/'
   });
 
   res.clearCookie('refreshToken', {
     httpOnly: true,
     secure: isProduction,
-    sameSite: sameSiteOption
+    sameSite: sameSiteOption,
+    path: '/'
   });
 
   res.clearCookie('logged_in', {
     httpOnly: false,
     secure: isProduction,
-    sameSite: sameSiteOption
+    sameSite: sameSiteOption,
+    path: '/'
   });
 };
 
